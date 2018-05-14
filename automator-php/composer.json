@@ -1,0 +1,13 @@
+{
+    "name": "moovly/automator-php-sample",
+    "type": "project",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "authors": [
+        {
+            "name": "Niels Vermaut",
+            "email": "niels.vermaut@moovly.com"
+        }
+    ]
+}
