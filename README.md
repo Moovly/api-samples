@@ -6,7 +6,8 @@ This repository houses the API Samples for the Moovly API. If you are looking fo
 ## Automator PHP
 
 1. Change $projectTemplateId and $accessToken
-2. Run
+2. Install dependencies with Composer
+3. Run
 
 ```
 php -f automator-php/app.php
