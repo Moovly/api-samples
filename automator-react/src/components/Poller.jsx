@@ -86,6 +86,8 @@ class Poller extends React.Component
               </div>
             </div>
           </div>}
+
+          <button onClick={() => {window.location.reload()}}>Restart</button>
         </div>
       </div>
     )

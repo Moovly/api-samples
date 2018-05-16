@@ -75,8 +75,16 @@ class FormContainer extends React.Component
     })
       .then(validateResponse)
       .then(response => response.json())
-      .then(response => {this.props.handleSetJobId(response.id); this.setState({isDone: true});})
-      .catch(() => this.setState({isFailed: true}))
+      .then(response => {
+        console.log(response);
+
+        if (response.status === 'error') {
+          throw new Error('Status was error.');
+        }
+
+        this.props.handleSetJobId(response.id); this.setState({isDone: true});
+      })
+      .catch(() => this.setState({isFailed: true, isDone: true}))
     ;
   };
 
@@ -158,7 +166,7 @@ class FormContainer extends React.Component
           </div>}
 
           {this.state.isRequested && this.state.isDone && this.state.isFailed && <div className="alert alert-danger">
-            The request failed. Please reload the page and try again.
+            The request failed. Please try again.
           </div>}
 
           {this.state.isDone && !this.state.isFailed && <div className="alert alert-info">
