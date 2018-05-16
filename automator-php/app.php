@@ -28,12 +28,26 @@ $template = json_decode($response->getBody()->getContents(), true);
 $templateId = $template['id'];
 $variables = $template['variables'];
 
+$values = [];
+
+$nameVariable = $variables[0];
+
+foreach ($clients as $key => $client) {
+    $values[] = [
+        "external_id" => $key,
+        "title" => 'Moov for ' . $client['name'],
+        "template_variables" => [
+            $nameVariable['id'] => $client['name']
+        ]
+    ];
+}
+
 $requestData = [
     'template_id' => $templateId,
     'options' => [
         'quality' => '480p'
     ],
-    'values' => $variables
+    'values' => $values
 ];
 
 $response = $httpClient->post('https://api.moovly.com/generator/v1/jobs', [
