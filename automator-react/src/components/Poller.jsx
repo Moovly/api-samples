@@ -32,7 +32,7 @@ class Poller extends React.Component
       .then(validateResponse)
       .then(response => response.json())
       .then(response => {this.setState({jobStatus: response}); return response})
-      .then(response => this.setState({isFinished: response.status === 'finished'}))
+      .then(response => this.setState({isFinished: response.status === 'finished' || response.status === 'error'}))
       .catch(() => this.setState({isFailed: true}))
   };
 
@@ -58,32 +58,35 @@ class Poller extends React.Component
   render()
   {
     return (
-      <div className="step step-poller">
-        JobId: {this.props.jobId}
-
-        {this.state.jobStatus !== null && <div className="job">
-          <div>Id: {this.props.jobId}</div>
-          <div>Status: {this.state.jobStatus.status}</div>
-          <div className="job__videos">
-            {this.state.jobStatus.videos.map(video => {
-              return (<div key={video.external_id}>
-                <ul>
-                  <li>External Id: {video.external_id}</li>
-                  <li>Status: {video.status}</li>
-                  <li>
-                    {video.status === 'started' && <span>Result: TBD</span>}
-                    {video.status === 'success' && <a href={video.url}>Result: Video</a>}
-                    {video.status === 'failed' && <span>Result: Error - {video.error}</span>}
-                  </li>
-                </ul>
-              </div>)
-            })}
-            <div>
-              Last time checked: {moment(this.state.lastTimeChecked).format('h:mm:ss')},
-              Next check: {moment(this.state.lastTimeChecked).add(1, 'minutes').format('h:mm:ss')}
+      <div className={`step step-poller ${this.props.isDone && 'step-done'}`}>
+        <div className="step__info">
+          <h2>Polling Job data</h2>
+        </div>
+        <div className="step__action">
+          {this.state.jobStatus !== null && <div className="job">
+            <div>Id: {this.props.jobId}</div>
+            <div>Status: {this.state.jobStatus.status}</div>
+            <div className="job__videos">
+              {this.state.jobStatus.videos.map(video => {
+                return (<div key={video.external_id}>
+                  <ul>
+                    <li>External Id: {video.external_id}</li>
+                    <li>Status: {video.status}</li>
+                    <li>
+                      {video.status === 'started' && <span>Result: TBD</span>}
+                      {video.status === 'success' && <a href={video.url}>Result: Video</a>}
+                      {video.status === 'failed' && <span>Result: Error - {video.error}</span>}
+                    </li>
+                  </ul>
+                </div>)
+              })}
+              <div>
+                Last time checked: {moment(this.state.lastTimeChecked).format('h:mm:ss')},
+                Next check: {moment(this.state.lastTimeChecked).add(1, 'minutes').format('h:mm:ss')}
+              </div>
             </div>
-          </div>
-        </div>}
+          </div>}
+        </div>
       </div>
     )
   }

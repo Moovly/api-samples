@@ -21,16 +21,34 @@ class FormContainer extends React.Component
     };
   }
 
+  componentDidMount = () =>
+  {
+    this.handleAddVideo();
+  };
+
   handleAddVideo = () => {
     const name = `${this.EXTERNAL_ID_PREFIX}-${this.state.externalIdCount}`;
 
-    let externalIds = this.state.videoExternalIds.slice(0);
+    let externalIds = this.state.videoExternalIds.splice(0);
 
     externalIds.push(name);
 
     this.setState({
       externalIdCount: this.state.externalIdCount + 1,
       videoExternalIds: externalIds
+    })
+  };
+
+  handleRemoveVideo = (toBeRemoved) => {
+    let externalIds = this.state.videoExternalIds.splice(0);
+    let values = this.state.values.splice(0);
+
+    externalIds = externalIds.filter(externalId => externalId !== toBeRemoved);
+    values = values.filter(value => value.external_id = toBeRemoved);
+
+    this.setState({
+      videoExternalIds: externalIds,
+      values: values
     })
   };
 
@@ -47,8 +65,6 @@ class FormContainer extends React.Component
 
     this.setState({isRequested: true, isDone: false});
 
-    console.log(requestData);
-
     fetch('https://api.moovly.com/generator/v1/jobs', {
       method: 'POST',
       headers: {
@@ -59,8 +75,7 @@ class FormContainer extends React.Component
     })
       .then(validateResponse)
       .then(response => response.json())
-      .then(response => {this.setState({setDone: true}); return response})
-      .then(response => this.props.handleSetJobId(response.id))
+      .then(response => {this.props.handleSetJobId(response.id); this.setState({isDone: true});})
       .catch(() => this.setState({isFailed: true}))
     ;
   };
@@ -105,40 +120,51 @@ class FormContainer extends React.Component
     });
 
     return (
-      <div className="step step-form">
-        <button onClick={this.handleAddVideo}>Add a video</button>
-
-        {this.state.isRequested && !this.state.isDone && !this.state.isFailed && <div className="alert alert-info">
-          We are submitting your request.
-        </div>}
-
-        {this.state.isRequested && this.state.isDone && this.state.isFailed && <div className="alert alert-danger">
-          The request failed. Please reload the page and try again.
-        </div>}
-
-        <form>
-          {this.state.videoExternalIds.map(externalId => {
-            return (
-              <div key={externalId} className="video-form">
-                <div className="video-form__name">
-                  {externalId}
+      <div className={`step step-form ${this.props.isDone && 'step-done'}`}>
+        <div className="step__info">
+          <h2>Data</h2>
+        </div>
+        <div className="step__action">
+          <form>
+            {this.state.videoExternalIds.map(externalId => {
+              return (
+                <div key={externalId} className="video-form">
+                  <div className="video-form__name">
+                    {externalId}
+                    <button onClick={this.handleRemoveVideo.bind(null, externalId)}>Remove</button>
+                  </div>
+                  <div className="video-form__form">
+                    {variables.map(variable => {
+                      return (<FormElement
+                        key={variable.id}
+                        variable={variable}
+                        externalId={externalId}
+                        setValue={this.setValue}
+                      />);
+                    })}
+                  </div>
                 </div>
-                <div className="video-form__form">
-                  {variables.map(variable => {
-                    return (<FormElement
-                      key={variable.id}
-                      variable={variable}
-                      externalId={externalId}
-                      setValue={this.setValue}
-                    />);
-                  })}
-                </div>
-              </div>
-            )
-          })}
+              )
+            })}
 
-          <button onClick={this.handleStartRendering}>Start rendering</button>
-        </form>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+              <div><button onClick={(e) => {e.preventDefault(); this.handleAddVideo();}} formNoValidate>Add a video</button></div>
+              <div><button onClick={this.handleStartRendering}>Start rendering</button></div>
+            </div>
+          </form>
+
+          {this.state.isRequested && !this.state.isDone && !this.state.isFailed && <div className="alert alert-info">
+            We are submitting your request.
+          </div>}
+
+          {this.state.isRequested && this.state.isDone && this.state.isFailed && <div className="alert alert-danger">
+            The request failed. Please reload the page and try again.
+          </div>}
+
+          {this.state.isDone && !this.state.isFailed && <div className="alert alert-info">
+            Your request was successful.
+          </div>}
+        </div>
       </div>
     )
   }

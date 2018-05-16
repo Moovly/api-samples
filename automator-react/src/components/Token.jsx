@@ -8,13 +8,18 @@ class Token extends React.Component
     super(props);
 
     this.state = {
-      token: '',
+      token: this.props.token || '',
       isTokenRequested: false,
       isTokenValid: false,
     }
   }
 
-  handleValidateClick = () =>
+  componentDidMount = () =>
+  {
+    this.handleValidateToken();
+  };
+
+  handleValidateToken = () =>
   {
     this.setState({isTokenRequested: true});
 
@@ -28,7 +33,7 @@ class Token extends React.Component
       .then(response => response.json())
       .then(() => {
         this.setState({isTokenValid: true});
-        window.setTimeout(() => this.props.handleSetToken(this.state.token, 250));
+        window.setTimeout(() => this.props.handleSetToken(this.state.token, true, 250));
       })
       .catch(() => this.setState({isTokenValid: false}))
     ;
@@ -36,12 +41,25 @@ class Token extends React.Component
 
   render()
   {
+    if (this.props.isHidden) {
+      return (<div />)
+    }
+
     return (
-      <div className="step step-token">
-        <h2>Your token</h2>
-        <input type="text" onChange={(e) => this.setState({token: e.target.value})} value={this.state.token}/>
-        <button onClick={this.handleValidateClick}>Validate</button>
-        {this.state.isTokenValid && <span>Your token is valid.</span>}
+      <div className={`step step-token ${this.props.isDone ? 'step-done' : ''}`}>
+        <div className="step__info">
+          <h2>Your token</h2>
+        </div>
+
+        <div className="step__action">
+          <input type="text" onChange={(e) => this.setState({token: e.target.value})} value={this.state.token}/>
+
+          <button onClick={this.handleValidateToken}>Validate</button>
+
+          {this.state.isTokenValid && <div className="alert alert-info">
+            Your token is valid.
+          </div>}
+        </div>
       </div>
     )
   }

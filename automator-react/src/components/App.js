@@ -4,24 +4,41 @@ import Token from "./Token";
 import Templates from "./Templates";
 import Form from "./Form";
 import Poller from "./Poller";
+import 'url-search-params-polyfill';
+import Theme from "./Theme";
 
 class App extends Component
 {
+  parameters = null;
+
   constructor(props)
   {
     super(props);
 
+    this.parameters = new URLSearchParams(window.location.search);
+
     this.state = {
-      token: null,
+      token: this.getTokenFromUrl(),
+      isTokenValid: false,
       templateId: null,
       variables: null,
       jobId: null,
     }
   }
 
-  handleSetToken = (token) =>
+  getTokenFromUrl = () =>
   {
-    this.setState({token: token});
+    return this.parameters.get('token') || null;
+  };
+
+  isTokenFormHidden = () =>
+  {
+    return this.parameters.get('token_hidden') === "1" || false;
+  };
+
+  handleSetToken = (token, valid) =>
+  {
+    this.setState({token: token, isTokenValid: valid});
   };
 
   handleSetTemplate = (templateId, variables) =>
@@ -47,7 +64,7 @@ class App extends Component
   };
 
   getStep = () => {
-    if (this.state.token === null) {
+    if (this.state.token === null || !this.state.isTokenValid) {
       return 0;
     }
 
@@ -67,12 +84,12 @@ class App extends Component
     const step = this.getStep();
 
     return (
-      <div>
-        {step === 0 && <Token {...this.actions}/>}
-        {step === 1 && <Templates {...this.state} {...this.actions}/>}
-        {step === 2 && <Form {...this.state} {...this.actions}/>}
-        {step === 3 && <Poller {...this.state} {...this.actions}/>}
-      </div>
+      <Theme>
+        <Token {...this.state} {...this.actions} isDone={step >= 1} isHidden={this.isTokenFormHidden()}/>
+        {step >= 1 && <Templates {...this.state} {...this.actions} isDone={step >= 2}/>}
+        {step >= 2 && <Form {...this.state} {...this.actions} isDone={step >= 3}/>}
+        {step >= 3 && <Poller {...this.state} {...this.actions} />}
+      </Theme>
     )
   }
 }

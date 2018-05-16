@@ -24,7 +24,7 @@ export default FormElement;
 
 const TextField = (props) => {
   return (
-    <div>
+    <div className="form-element">
       <label htmlFor={props.variable.id + props.externalId}>{props.variable.name}</label>
       <input
         type="text"
@@ -40,7 +40,7 @@ const TextField = (props) => {
 
 const Multiline = (props) => {
   return (
-    <div>
+    <div className="form-element">
       <label htmlFor={props.variable.id + props.externalId}>{props.variable.name}</label>
       <textarea
         id={props.variable.id + props.externalId}
