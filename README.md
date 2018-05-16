@@ -12,3 +12,22 @@ This repository houses the API Samples for the Moovly API. If you are looking fo
 ```
 php -f automator-php/app.php
 ```
+
+## Automator React
+
+If you have docker installed:
+
+```bash
+$ cd automator-react
+$ docker-compose run --rm install
+$ docker-compose up -d
+```
+
+If you have a local node version installed (^8):
+
+```bash
+$ yarn install #or npm install
+$ yarn start
+```
+
+Navigate to [http://localhost:3000](http://localhost:3000)
