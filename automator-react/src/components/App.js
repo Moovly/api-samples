@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import logo from '../static/logo.svg';
 import '../styles/App.css';
+import Token from "./Token";
+import Templates from "./Templates";
+import Form from "./Form";
+import Poller from "./Poller";
 
 class App extends Component
 {
@@ -9,38 +12,66 @@ class App extends Component
     super(props);
 
     this.state = {
-      step: 0,
-      token: '',
-      isValid: false
+      token: null,
+      templateId: null,
+      variables: null,
+      jobId: null,
     }
   }
 
-  handleValidateClick = () =>
+  handleSetToken = (token) =>
   {
-    fetch('https://api.moovly.com/user/v1/users/me', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${this.state.token}`,
-      }
-    })
-      .then(response => response.json())
-      .then(response => {
-        this.setState({isValid: true})
-      })
-      .catch(() => this.setState({isValid: false}))
-    ;
+    this.setState({token: token});
+  };
+
+  handleSetTemplate = (templateId, variables) =>
+  {
+    this.setState({templateId: templateId, variables: variables});
+  };
+
+  handleSetValues = (values) =>
+  {
+    this.setState({values: values});
+  };
+
+  handleSetJobId = (jobId) =>
+  {
+    this.setState({jobId: jobId});
+  };
+
+  actions = {
+    handleSetToken: this.handleSetToken,
+    handleSetTemplate: this.handleSetTemplate,
+    handleSetValues: this.handleSetValues,
+    handleSetJobId: this.handleSetJobId
+  };
+
+  getStep = () => {
+    if (this.state.token === null) {
+      return 0;
+    }
+
+    if (this.state.templateId === null || this.state.variables === null) {
+      return 1;
+    }
+
+    if (this.state.jobId === null) {
+      return 2;
+    }
+
+    return 3;
   };
 
   render()
   {
+    const step = this.getStep();
+
     return (
       <div>
-        <div>
-          <h2>Your token</h2>
-          <input type="text" onChange={(e) => this.setState({token: e.target.value})} value={this.state.token}/>
-          <button onClick={this.handleValidateClick}>Validate</button>
-          {this.state.isValid && <span>Your token is valid</span>}
-        </div>
+        {step === 0 && <Token {...this.actions}/>}
+        {step === 1 && <Templates {...this.state} {...this.actions}/>}
+        {step === 2 && <Form {...this.state} {...this.actions}/>}
+        {step === 3 && <Poller {...this.state} {...this.actions}/>}
       </div>
     )
   }
