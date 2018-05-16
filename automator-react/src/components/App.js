@@ -1,59 +1,39 @@
-import React, { Component } from 'react';
-import '../styles/App.css';
+import * as  React from "react";
+import "../styles/App.css";
 import Token from "./Token";
 import Templates from "./Templates";
 import Form from "./Form";
 import Poller from "./Poller";
-import 'url-search-params-polyfill';
+import "url-search-params-polyfill";
 import Theme from "./Theme";
 
-class App extends Component
-{
-  parameters = null;
+class App extends React.Component {
+   parameters = new URLSearchParams(window.location.search);
 
-  constructor(props)
-  {
-    super(props);
-
-    this.parameters = new URLSearchParams(window.location.search);
-
-    this.state = {
-      token: this.getTokenFromUrl(),
-      isTokenValid: false,
-      templateId: null,
-      variables: null,
-      jobId: null,
-    }
-  }
-
-  getTokenFromUrl = () =>
-  {
-    return this.parameters.get('token') || null;
+  state = {
+    token: this.parameters.get("token") || null,
+    isTokenValid: false,
+    templateId: null,
+    variables: null,
+    jobId: null
   };
 
-  isTokenFormHidden = () =>
-  {
-    return this.parameters.get('token_hidden') === "1" || false;
+  isTokenFormHidden = () => this.parameters.get("token_hidden") === "1" || false;
+
+  handleSetToken = (token, valid) => {
+    this.setState({ token, isTokenValid: valid });
   };
 
-  handleSetToken = (token, valid) =>
-  {
-    this.setState({token: token, isTokenValid: valid});
+  handleSetTemplate = (templateId, variables) => {
+    this.setState({ templateId, variables });
   };
 
-  handleSetTemplate = (templateId, variables) =>
-  {
-    this.setState({templateId: templateId, variables: variables});
+  handleSetValues = values => {
+    this.setState({ values });
   };
 
-  handleSetValues = (values) =>
-  {
-    this.setState({values: values});
-  };
-
-  handleSetJobId = (jobId) =>
-  {
-    this.setState({jobId: jobId});
+  handleSetJobId = jobId => {
+    this.setState({ jobId });
   };
 
   actions = {
@@ -79,18 +59,17 @@ class App extends Component
     return 3;
   };
 
-  render()
-  {
+  render() {
     const step = this.getStep();
 
     return (
       <Theme>
-        <Token {...this.state} {...this.actions} isDone={step >= 1} isHidden={this.isTokenFormHidden()}/>
-        {step >= 1 && <Templates {...this.state} {...this.actions} isDone={step >= 2}/>}
-        {step >= 2 && <Form {...this.state} {...this.actions} isDone={step >= 3}/>}
+        <Token {...this.state} {...this.actions} isDone={step >= 1} isHidden={this.isTokenFormHidden()} />
+        {step >= 1 && <Templates {...this.state} {...this.actions} isDone={step >= 2} />}
+        {step >= 2 && <Form {...this.state} {...this.actions} isDone={step >= 3} />}
         {step >= 3 && <Poller {...this.state} {...this.actions} />}
       </Theme>
-    )
+    );
   }
 }
 
