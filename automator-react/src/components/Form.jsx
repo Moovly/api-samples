@@ -22,7 +22,7 @@ export default class FormContainer extends React.Component {
   handleAddVideo = () => {
     const name = `${this.EXTERNAL_ID_PREFIX}-${this.state.externalIdCount}`;
 
-    this.setState(({ externalId, videoExternalIds }) => ({
+    this.setState(({ externalIdCount, videoExternalIds }) => ({
       externalIdCount: externalIdCount + 1,
       videoExternalIds: [...videoExternalIds, name]
     }));
@@ -46,7 +46,7 @@ export default class FormContainer extends React.Component {
       values: this.state.values
     };
 
-    this.setState({ isRequested: true, isDone: false, errorText: null });
+    this.setState({ isRequested: true, isDone: false, errorText: null, isFailed: null });
 
     fetch("https://api.moovly.com/generator/v1/jobs", {
       method: "POST",
@@ -109,8 +109,8 @@ export default class FormContainer extends React.Component {
     const variables = this.props.variables.sort((a, b) => Math.sign(a.weight - b.weight));
 
     const isProcessing = isRequested && !isDone && !isFailed;
-    const isFailed = isRequested && isDone && isFailed;
-    const isSuccessful = isDone && isFailed;
+    const isFetchFailed = isRequested && isDone && isFailed;
+    const isSuccessful = isDone && !isFailed;
 
     return (
       <div className={`step step-form ${this.props.isDone && "step-done"}`}>
@@ -156,7 +156,7 @@ export default class FormContainer extends React.Component {
             </div>
           </form>
           {isProcessing && <div className="alert alert-info">We are submitting your request.</div>}
-          {isFailed && <div className="alert alert-danger">The request failed. Please try again.</div>}
+          {isFetchFailed && <div className="alert alert-danger">The request failed. Please try again.</div>}
           {isSuccessful && <div className="alert alert-info">Your request was successful.</div>}
         </div>
       </div>
