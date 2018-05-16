@@ -80,10 +80,10 @@ class Poller extends React.Component
                   </ul>
                 </div>)
               })}
-              <div>
+              {!this.state.isFinished && <div>
                 Last time checked: {moment(this.state.lastTimeChecked).format('h:mm:ss')},
                 Next check: {moment(this.state.lastTimeChecked).add(1, 'minutes').format('h:mm:ss')}
-              </div>
+              </div>}
             </div>
           </div>}
 

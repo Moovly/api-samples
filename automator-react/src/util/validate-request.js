@@ -1,6 +1,6 @@
 const validateResponse = (response) => {
   if (!response.ok) {
-    throw Error(response);
+    throw new Error('Bad');
   }
 
   return response;

@@ -18,6 +18,7 @@ class FormContainer extends React.Component
       isRequested: false,
       isDone: false,
       isFailed: false,
+      errorText: null,
     };
   }
 
@@ -63,7 +64,7 @@ class FormContainer extends React.Component
       values: this.state.values,
     };
 
-    this.setState({isRequested: true, isDone: false});
+    this.setState({isRequested: true, isDone: false, errorText: null});
 
     fetch('https://api.moovly.com/generator/v1/jobs', {
       method: 'POST',
@@ -76,15 +77,13 @@ class FormContainer extends React.Component
       .then(validateResponse)
       .then(response => response.json())
       .then(response => {
-        console.log(response);
-
         if (response.status === 'error') {
-          throw new Error('Status was error.');
+          throw new Error(JSON.stringify(response));
         }
 
         this.props.handleSetJobId(response.id); this.setState({isDone: true});
       })
-      .catch(() => this.setState({isFailed: true, isDone: true}))
+      .catch((e) => this.setState({isFailed: true, isDone: true}))
     ;
   };
 
