@@ -8,5 +8,5 @@ WORKDIR /website_files
 
 RUN rm -rf *
 
-ADD ./build /var/www
-ADD ./docker/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+ADD ./automator-react/build /var/www
+ADD ./automator-react/docker/nginx/nginx.conf /etc/nginx/conf.d/default.conf
