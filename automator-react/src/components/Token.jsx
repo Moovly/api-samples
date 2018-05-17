@@ -25,15 +25,14 @@ export default class Token extends React.Component {
       .then(response => response.json())
       .then(() => {
         this.setState({ isTokenValid: true });
-        // why timeout needed?
-        window.setTimeout(() => this.props.handleSetToken(this.state.token, true, 250));
+        this.props.handleSetToken(this.state.token, true);
       })
       .catch(() => this.setState({ isTokenValid: false }));
   };
 
   onChange = (e) => {
     this.setState({ token: e.target.value})
-  }
+  };
 
   render() {
     if (this.props.isHidden) return null;

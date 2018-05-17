@@ -3,10 +3,10 @@ import FormElement from "./FormElement";
 import validateResponse from "../util/validate-request";
 
 export default class FormContainer extends React.Component {
-  EXTERNAL_ID_PREFIX = "automator-react-external-id-";
+  EXTERNAL_ID_PREFIX = "Video";
 
   state = {
-    externalIdCount: 0,
+    externalIdCount: 1,
     videoExternalIds: [],
     values: [],
     isRequested: false,
@@ -20,7 +20,7 @@ export default class FormContainer extends React.Component {
   };
 
   handleAddVideo = () => {
-    const name = `${this.EXTERNAL_ID_PREFIX}-${this.state.externalIdCount}`;
+    const name = `${this.EXTERNAL_ID_PREFIX} ${this.state.externalIdCount}`;
 
     this.setState(({ externalIdCount, videoExternalIds }) => ({
       externalIdCount: externalIdCount + 1,
@@ -117,7 +117,7 @@ export default class FormContainer extends React.Component {
     return (
       <div className={`step step-form ${this.props.isDone && "step-done"}`}>
         <div className="step__info">
-          <h2>Data</h2>
+          <h2>Enter your data</h2>
         </div>
         <div className="step__action">
           <form>
@@ -134,6 +134,7 @@ export default class FormContainer extends React.Component {
                       variable={variable}
                       externalId={externalId}
                       setValue={this.setValue}
+                      {...this.props}
                     />
                   ))}
                 </div>

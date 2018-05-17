@@ -57,36 +57,37 @@ export default class Poller extends React.Component {
     return (
       <div className={`step step-poller ${this.props.isDone && "step-done"}`}>
         <div className="step__info">
-          <h2>Polling Job data</h2>
+          <h2>Wait for the result</h2>
         </div>
         <div className="step__action">
           {this.state.jobStatus !== null && (
             <div className="job">
-              <div>Id: {this.props.jobId}</div>
               <div>Status: {this.state.jobStatus.status}</div>
               <div className="job__videos">
                 {this.state.jobStatus.videos.map(video => (
-                  <React.Fragment key={video.external_id}>
+                  <div key={video.external_id} className="job__videos__video">
                     <ul>
                       <li>External Id: {video.external_id}</li>
                       <li>Status: {video.status}</li>
                       <li>
                         {video.status === "started" && <span>Result: TBD</span>}
-                        {video.status === "success" && <a href={video.url}>Result: Video</a>}
+                        {video.status === "success" && <span>Result: Done</span>}
+                        {video.status === "success" && <a href={video.url}>View video</a>}
                         {video.status === "failed" && <span>Result: Error - {video.error}</span>}
                       </li>
                     </ul>
-                  </React.Fragment>
-                ))}
-                {!this.state.isFinished && (
-                  <div>
-                    Last time checked: {moment(this.state.lastTimeChecked).format("h:mm:ss")}, Next check:{" "}
-                    {moment(this.state.lastTimeChecked)
-                      .add(1, "minutes")
-                      .format("h:mm:ss")}
                   </div>
-                )}
+                ))}
               </div>
+
+              {!this.state.isFinished && (
+                <div>
+                  Last time checked: {moment(this.state.lastTimeChecked).format("h:mm:ss")}, Next check:{" "}
+                  {moment(this.state.lastTimeChecked)
+                    .add(1, "minutes")
+                    .format("h:mm:ss")}
+                </div>
+              )}
             </div>
           )}
           <button onClick={window.location.reload}>Restart</button>

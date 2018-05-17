@@ -35,7 +35,7 @@ export default class Templates extends React.Component {
     return (
       <div className={`step step-templates ${this.props.isDone ? "step-done" : ""}`}>
         <div className="step__info">
-          <h2>Templates</h2>
+          <h2>Choose your template</h2>
         </div>
 
         <div className="step__action">
