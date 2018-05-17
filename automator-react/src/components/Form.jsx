@@ -86,21 +86,23 @@ export default class FormContainer extends React.Component {
         return {
           values: [...values, newValue]
         };
-      } else {
-        return {
-          values: values.map(v => {
-            if (v.external_id === externalId) {
-              return {
-                ...v,
-                template_variables: {
-                  ...v.template_variables,
-                  [variableId]: content
-                }
-              };
-            } else return v;
-          })
-        };
       }
+
+      return {
+        values: values.map(v => {
+          if (v.external_id === externalId) {
+            return {
+              ...v,
+              template_variables: {
+                ...v.template_variables,
+                [variableId]: content
+              }
+            };
+          }
+
+          return v;
+        })
+      };
     });
   };
 
