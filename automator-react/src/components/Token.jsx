@@ -13,6 +13,10 @@ export default class Token extends React.Component {
   };
 
   handleValidateToken = () => {
+    if (this.state.token === "") {
+      return;
+    }
+
     this.setState({ isTokenRequested: true });
 
     fetch("https://api.moovly.com/user/v1/users/me", {
