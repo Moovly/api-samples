@@ -1,7 +1,7 @@
 # API Samples
 
 This repository houses the API Samples for the Moovly API. If you are looking for documentation, you need to go to
-[https://github.com/Moovly/api-documentation](https://github.com/Moovly/api-documentation).
+[https://developer.moovly.com/docs/api](https://developer.moovly.com/docs/api).
 
 ## Automator PHP
 
