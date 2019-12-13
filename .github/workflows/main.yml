@@ -28,5 +28,5 @@ jobs:
       run: |
         docker build -f Dockerfile.react -t $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react .
         docker push $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react
-        docker tag $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react $ECR_REGISTRY/${ECR_REPOSITORY}_server:${GITHUB_REF#*/}-react
-        docker push $ECR_REGISTRY/${ECR_REPOSITORY}_server:${GITHUB_REF#*/}-react
+        docker tag $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react $ECR_REGISTRY/${ECR_REPOSITORY}_server:${GITHUB_REF#refs/heads/}-react
+        docker push $ECR_REGISTRY/${ECR_REPOSITORY}_server:${GITHUB_REF#refs/heads/}-react
