@@ -1,0 +1,32 @@
+name: CI/CD
+
+on: push
+
+env:
+  ECR_REPOSITORY: api-samples
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: |
+      docker-compose -f automator-react/docker-compose.yml run --rm install
+      docker-compose -f automator-react/docker-compose.yml run --rm build
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    - name: Build, tag and push to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      run: |
+        docker build -f Dockerfile.react -t $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react .
+        docker push $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react
+        docker tag $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react $ECR_REGISTRY/${ECR_REPOSITORY}_server:${GITHUB_REF##*/}-react
+        docker push $ECR_REGISTRY/${ECR_REPOSITORY}_server:${GITHUB_REF##*/}-react
