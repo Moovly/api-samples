@@ -11,8 +11,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: |
-      docker-compose -f automator-react/docker-compose.yml run --rm install
-      docker-compose -f automator-react/docker-compose.yml run --rm build
+        docker-compose -f automator-react/docker-compose.yml run --rm install
+        docker-compose -f automator-react/docker-compose.yml run --rm build
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
