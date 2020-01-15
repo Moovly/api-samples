@@ -26,7 +26,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        docker build -f Dockerfile.react -t $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react .
-        docker push $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react
-        docker tag $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA-react $ECR_REGISTRY/${ECR_REPOSITORY}:${GITHUB_REF#refs/heads/}-react
-        docker push $ECR_REGISTRY/${ECR_REPOSITORY}:${GITHUB_REF#refs/heads/}-react
+        docker build -t $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA .
+        docker push $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA
+        docker tag $ECR_REGISTRY/${ECR_REPOSITORY}:$GITHUB_SHA $ECR_REGISTRY/${ECR_REPOSITORY}:${GITHUB_REF#refs/heads/}
+        docker push $ECR_REGISTRY/${ECR_REPOSITORY}:${GITHUB_REF#refs/heads/}
