@@ -7,7 +7,7 @@
     "lines-to-paragraphs": "^1.0.3",
     "moment": "^2.22.1",
     "react": "^16.3.2",
-    "react-dom": "^16.3.2",
+    "react-dom": "^16.3.3",
     "react-scripts": "1.1.4",
     "url-search-params-polyfill": "^4.0.0"
   },
